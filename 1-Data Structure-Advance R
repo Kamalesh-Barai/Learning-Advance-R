@@ -1,0 +1,124 @@
+# all contents must be of the same type (homogenous) 0r the content can be of
+# different types (heterogeneous)
+
+#######   Homogeneous   ########   Heterogeneous   ####
+                                                      #
+# 1d     Atomic Vector                List            #
+# 2d     Matrix                       Data frame      #
+# nd     Array                                        #
+                                                      #
+#######################################################
+
+#####################   Vectors   #####################
+
+# The basic data structure in R is the vector. Vectors come in two flavours:
+     # Atomic Vector         # List
+
+# They have three common properties:
+     # Type                  # Length                     # Attributes
+# What it is.     How many elements it contains       Additional Metadata
+  typeof()                 length()                       attributes()
+
+# All elements of an atomic vector must be the same type.
+# The elements of a list can have different types.
+
+# is.vector() does not test if an object is a vector. Insted it returns TRUE
+# only if the object is a vector with no attributes apart form names.
+
+vec <- c("A" = 1, "B" = 2, "D" = 3)
+vec
+is.vector(vec)
+is.atomic(vec)
+attributes(vec)
+
+names(vec) <- NULL
+vec
+is.vector(vec)
+is.atomic(vec)
+attributes(vec)
+
+class(vec) <- "Number"
+vec
+is.vector(vec)
+is.atomic(vec)
+attributes(vec)
+
+# Use is.atomic() || is.list() to test if an object is actually a vector.
+# is.atomic() returns TRUE if an object of an atomic type ("logical",
+# "integer", "double or numeric", "character", "complex" and "raw") and NULL. 
+
+vec <- c("A" = 1, "B" = 2, "D" = 3)
+typeof(vec)
+is.atomic(vec) || is.list(vec)
+
+mat <- matrix(1:20, ncol = 5)
+attributes(mat)
+typeof(mat)
+is.vector(mat)
+is.atomic(mat) || is.list(mat)
+
+# There are four common types of atomic vectors:
+# Logical      Integer       Double or Numeric       Character
+
+# There are two rare types of atomic vectors:
+# Complex      Raw
+
+# Atomic vectors are usually created with c(), short for combine:
+double_vector <- c(1, 2.5, 4.5)
+typeof(double_vector)
+
+# With the L suffix, i get an integer rathar than double
+integer_vector <- c(1L, 4L, 6L)
+typeof(integer_vector)
+
+# Use TRUE and FALSE (or T and F) to create logical vectors
+logical_vectors <- c(TRUE, FALSE, T, F)
+typeof(logical_vectors)
+
+character_vector <- c("These are", "some strings")
+typeof(character_vector)
+
+# Atomic vectors are always flat, even if i nest c()'s:
+c(1, c(2, c(3, 4)))
+# the same as
+c(1, 2, 3, 4)
+
+# Missing values are specified with NA, which is a logical vector of length 1.
+typeof(NA)
+length(NA)
+
+# NA will always be coerced to the correct type if used inside c(), or i can
+# create NAs of a specific type with NA_real (a double vector), NA_integer_
+# and NA_character_
+Missing_value <- c(NA, NA, NA)
+Missing_value
+typeof(Missing_value)
+
+Missing_value <- c(NA, "B", NA, NA)
+Missing_value
+typeof(Missing_value)
+
+Missing_value <- c(NA, 6, NA, NA)
+Missing_value
+typeof(Missing_value)
+
+Missing_value <- c(NA, TRUE, NA, NA)
+Missing_value
+typeof(Missing_value)
+
+Missing_value <- c(NA, NA_character_, NA)
+Missing_value
+typeof(Missing_value)
+
+Missing_value <- c(NA, NA_integer_, NA)
+Missing_value
+typeof(Missing_value)
+
+Missing_value <- c(NA, NA_real_, NA)
+Missing_value
+typeof(Missing_value)
+
+#####################    Types and Tests    #####################
+
+# Given a vector, i can determine its type with typeof(), or check if it's a
+# specific type
