@@ -121,4 +121,97 @@ typeof(Missing_value)
 #####################    Types and Tests    #####################
 
 # Given a vector, i can determine its type with typeof(), or check if it's a
-# specific type
+# specific type with an "is" function: 
+# is.character()      is.integer()     is.double()     is.logical()
+# OR, more generally, is.atomic()
+int_var <- c(1L, 6L, 10L)
+typeof(int_var)
+is.atomic(int_var)
+
+dbl_var <- c(1, 2.5, 4.5)
+typeof(dbl_var)
+is.atomic(dbl_var)
+
+# is.numeric() is a general test for the "numberliness" of a vector and returns
+# TRUE for both integer and double vectors. 
+is.numeric(int_var)
+is.numeric(dbl_var)
+is.numeric("KAMALESH")
+is.numeric(TRUE)
+is.numeric(sum(TRUE))
+
+# When i attempt to combine different types they will be coerced to the most
+# flexible type. Types from least to most flexible are:
+# Logical, Integer, Double, Character
+str(c(TRUE, 2L))
+str(c(TRUE, 2))
+str(c(TRUE, "K"))
+str(c(TRUE, 10L, 34))
+str(c(TRUE, 10L, "K"))
+str(c(10L, 35, "40"))
+
+# When a logical vector is coerced to an integer or double, TRUE becomes 1 and
+# FALSE becomes 0.
+x <- c(c(FALSE , FALSE, TRUE))
+as.numeric(x)
+as.double(x)
+as.integer(x)
+as.character(x)
+sum(x)
+mean(x)
+
+###################   Lists  #####################
+#                                                #
+###################   Lists  #####################
+
+# Lists are different from atomic vectors because their elements can be of any
+# type, including lists. I can construct lists by using list():
+
+x <- list(1:3, "a", c(TRUE, FALSE, TRUE), c(2.3, 5.9))
+x
+str(x)
+
+# Lists are sometimes called recursive vectors, because a list can contain
+# other lists. This makes them fundamentally different from atomic vectors.
+
+x <- list(list(list(list())))
+x
+str(x)
+is.recursive(x)
+
+# c() will combine several lists into one. If given a combination of atomic
+# vectors and lists, c() will coerce the vectors to lists before combine them.
+
+x <- list(list(1, 2), c(3, 4))
+y <- c(list(1, 2), c(3, 4))
+
+x
+y
+
+str(x)
+str(y)
+
+# The typeof() a list is list. I can test for a list with is.list() and coerce
+# to a list with as.list().
+
+# Lists are used to build up many of the more complicated data structure in R.
+# For example, both data frames and linear models object are lists:
+
+is.list(mtcars)
+model <- lm(mpg ~ wt, data = mtcars)
+is.list(model)
+
+# Find default datasets
+
+library(help = "datasets")
+help(package = "datasets")
+
+# I can turn a list into an atomic vector with unlist().
+# If the elements of a list have different types, unlist() uses the
+# same coercion rules as c().
+
+model <- mtcars
+model <- unlist(model)
+model <- unlist(model, use.names = FALSE)
+model[1:10]
+model
