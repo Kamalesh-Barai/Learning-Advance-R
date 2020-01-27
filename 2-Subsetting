@@ -210,3 +210,156 @@ mtcars[1:20, ]
 # Implement my own function that extracts the diagonal entries from a matrix (it
 # should behave like diag(x) where x is a matrix).
 
+x <- outer(letters[1:5], LETTERS[1:5], FUN = "paste", sep = "")
+x
+# 1st function
+jFun <- function(x) {
+  stopifnot(is.matrix(x), nrow(x) == ncol(x))
+  n <- nrow(x)
+  return(x[matrix(seq_len(n), nrow = n, ncol = 2)])
+}
+x
+jFun(x)
+
+###################   Understanding the first function   #################
+
+# Checking conditions with stopifnot.
+# To create an error, I can use the function "stop". If a variable x needed to be
+# a character, i could check for this condition with an if statement and throw an
+# error if the condition was violated.
+
+x <- 1
+if (!is.character(x)) {
+  stop("x must be a character vector.")
+}
+
+# If we had a multiple conditions to check, i can use the function "stopifnot".
+# I can list as many requirements that should evaluate to TRUE, and stopifnot
+# throws an error if it finds one that is FALSE.
+
+stopifnot(is.character(x))
+
+# If x also had to have a length of one, i can add that condition
+stopifnot(length(x) == 1, is.character(x))
+
+a <- c(8, 9, 10)
+b <- c(9, 10)
+c <- 10
+
+seq_along(a)
+seq_along(b)
+seq_along(c)
+
+seq(a)
+seq(b)
+seq(c)
+
+sample(a)
+sample(b)
+sample(c)
+
+seq_len(a)
+seq_len(b)
+seq_len(c)
+
+# 2nd function
+get_diag <- function(input_matrix) {
+  n <- min(dim(input_matrix))
+  select <- vector()
+  for (i in 1:n) {
+    select[i] <- input_matrix[i, i]
+  }
+  return(select)
+}
+get_diag(x)
+
+# Understading 2nd function
+
+dim(x)
+min(dim(x))
+vector()
+select <- vector()
+typeof(select)
+class(select)
+length(select)
+
+###################   Subsetting Operators  #####################
+#                                                               #
+###################   Subsetting Operators  #####################
+
+# [[ is similar to [, except it can only return a single value and it allows me
+# to pull pieces out of a list. $ is a useful shorthand for [[ combined with
+# character subsetting. When [ is applied to a list it always returns a list. It
+# never gives me the contents of the list. To get contents, i need to use [[:
+
+a <- list(a = 1, b = 2)
+a[[1]]
+a[["a"]]
+
+# If i do supply a vector it indexes recursively
+b <- list(a = list(b = list(c = list(d = 1))))
+b[[c("a", "b", "c", "d")]]
+b[["a"]][["b"]][["c"]][["d"]]
+b[["a"]][["b"]]
+b[[c("a", "b")]]
+
+# Atomic Vector: Remove names.
+x <- c(a = 1, b = 2)
+x[1]
+x[[1]]
+
+# List: Return the object inside the list, not a single element list.
+y <- list(a = 1, b = 2)
+str(y[1])
+str(y[[1]])
+
+# Factor: drops any unused levels
+z <- factor(c("a", "b"))
+z[1]
+z[1, drop = TRUE]
+
+# Matrix or Array: If any of the dimensions has length 1, drops that dimension.
+a <- matrix(1:4, nrow = 2)
+a
+a[1, , drop = FALSE]
+a[1, ]
+
+# Data frame: if output is a single column, returns a vector insted of a data frame.
+df <- data.frame(a = 1:2, b = 3:4)
+df
+df[1]
+str(df[1])
+df[[1]]
+str(df[[1]])
+df[, "a"]
+str(df[, "a"])
+str(df[, "a", drop = FALSE])
+
+# One common mistake with $ is to try and use it when i have the name of a column
+# stored in a variable:
+
+var <- "cyl"
+mtcars$var
+
+mtcars[[var]]  # Instead use [[]]
+
+# There's one important difference between $ and [[. $ does partial matching:
+x <- list(abc = 1)
+x$a
+x[["a"]]
+
+# Missing/out of bounds indices
+# [ and [[ differ slightly in their behaviour when the index is out of bounds.
+# ex: when i try to extract the fifth element of a length four vector, or subset
+# a vector wiith NA or NULL:
+
+x <- 1:4
+x[5]
+str(x[5])
+str(x[NA_real_])
+str(x[NULL])
+
+x[[5]]
+x[[NA_real_]]
+x[[NULL]]
+
