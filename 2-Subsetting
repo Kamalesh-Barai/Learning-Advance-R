@@ -363,3 +363,103 @@ x[[5]]
 x[[NA_real_]]
 x[[NULL]]
 
+# Subsetting and Assignment
+x <- 1:5
+x
+x[c(1, 2)] <- 2:3
+x
+
+# The length of the LHS needs to match the RHS
+x[-1] <- 4:1
+x
+
+# Note that there's no checking for duplicate indices
+x[c(1, 1)] <- 2:3
+x
+
+# I can't combine integer indices with NA
+x[c(1, NA)] <- c(1, 2)
+
+# But i can combine logical indices with NA.
+# Where they're treated as false.
+x[c(T, F, NA)] <- 1
+x
+
+# This is mostly useful when conditionally modifying vectors
+df <- data.frame(a = c(1, 10, NA))
+df
+df$a[df$a < 5]
+df$a[df$a < 5] <- 0
+df
+
+# Subsetting with nothing can be useful in conjuction with assignment because it
+# will preserve the original object class and structure.
+mtcar <- mtcars
+mtcar[] <- lapply(mtcars, as.integer)
+mtcar <- lapply(mtcars, as.integer)
+mtcar
+
+# With lists, I can use subsetting + assignment + NULL to remove components from
+# a list. To add a literal NULL to a list, use [ and list(NULL)
+
+x <- list(a = 1, b = 2)
+x
+x[["b"]] <- NULL
+x
+str(x)
+
+y <- list(a = 1)
+y
+y["b"] <- list(NULL)
+y
+str(y)
+
+# Lookup Tables
+# I want to convert abbreviations.
+
+x <- c("m", "f", "u", "f", "f", "m", "m")
+lookup <- c(m = "male", f = "female", u = NA)
+lookup[x]
+unname(lookup[x])
+
+# Or with fewer output values
+c(m = "known", f = "known", u = "unknown")[x]
+
+# Matching and merging by hand (integer subsetting)
+# I have a vector of integer grades, and a table that describes their properties:
+
+grades <- c(1, 2, 2, 3, 1)
+info <- data.frame(
+  grade = 3:1,
+  desc = c("Excelent", "Good", "Poor"),
+  fail = c(F, F, T)
+)
+
+grades
+id <- match(grades, info$grade)
+id
+info
+info[id, ]
+
+rownames(info) <- info$grade
+info[as.character(grades), ]
+
+match(c("Kam", "sam", "ant", "tri"), c("tri", "Kam", "sam", "ant"))
+
+# Random sample/bootstrap (integer subsetting)
+df <- data.frame(x = rep(1:3, each = 2), y = 6:1, z = letters[1:6])
+df
+
+set.seed(10)    # Set seed for reproducibility
+nrow(df)
+sample(6)
+sample(nrow(df))
+df[sample(nrow(df)), ]
+
+sample(nrow(df), size = 3) # Select 3 random rows
+df[sample(nrow(df), size = 3), ]
+
+df[sample(nrow(df), size = 6, rep = T), ]    # select 6 bootstrap replicates
+
+# Ordering (Integer Subsetting)
+
