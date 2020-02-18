@@ -1,0 +1,59 @@
+# How would i more typically write this code?
+'+'(1, '*'(2, 3))
+
+1 + (2 * 3)
+
+# How could i make this call easier to read?
+mean(, TRUE, x = c(1:10, NA))
+
+mean(c(1:10, NA), na.rm = TRUE)
+
+# Function components
+# All R functions have three parts:
+# the body(), the code inside the function.
+# the formals(), the list of arguments.
+# the environment(), the map of the location of the function's variables.
+
+f <- function(x) x^2
+f
+
+formals(f)
+body(f)
+environment(f)
+
+# Primitive functions
+# Primitive functions, like sum(), call C code directly with .primitive()
+# and contain no R code. Therefore their formals(), body(), and
+# environment() are all NULL:
+
+sum
+formals(sum)
+body(sum)
+environment(sum)
+
+# What function allows me to tell if an object is a function?
+is.function(sum)
+
+# What functions allows me to tell if a function is a primitive function?
+is.primitive(sum)
+
+# This code makes a list of all functions in the base package.
+objs <- mget(ls("package:base"), inherits = TRUE)
+funs <- Filter(is.function, objs)
+
+# Which base function has the most arguments?
+
+m_args <- function(funs){
+  vec <- vector(length = length(funs))
+  for (i in 1:length(funs)) {
+    vec[i] <- length(formals(names(funs[i])))
+  }
+  names(funs[which(vec == max(vec))])
+}
+
+m_args(funs)
+
+# Another way
+arg_length <- lapply(funs, function(x)(length(formals(x))))
+max_args <- which(arg_length == max(unlist(arg_length)))
+names(funs[max_args])
