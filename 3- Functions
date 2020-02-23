@@ -246,3 +246,105 @@ x <- list(1:3, 4:9, 10:12)
 x
 sapply(x, "[", 2)
 sapply(x, function(x) x[2])    # equivalent to
+
+# Function Arguments....................
+# When calling a function i can specify arguments by position, by complete name,
+# or by partial name. Arguments are matched first by exact name, then prefix matching,
+# and finally by by position.
+
+f <- function(abcdef, bcde1, bcde2) {
+  list(a = abcdef, b1 = bcde1, b2 = bcde2)
+}
+
+f(1, 2, 3)
+str(f(1, 2, 3))
+str(f(2, 3, abcdef = 1))
+
+# can abbreviate long argument names:
+str(f(2, 3, a = 1))
+
+# But this doesn't work because abbreviation is ambiguous
+str(f(1, 3, b = 1))
+
+# Calling a function given a list of arguments
+# Suppose i had a list of function argumrnts. How could i send that list to mean()?
+# I need do.call() function:
+
+args <- list(1:10, na.rm = TRUE)
+args
+do.call(mean, args)
+
+mean(1:10, na.rm = TRUE)   # Equivalent to
+
+# I can determine if an argument was supplied or not with the missing() function.
+i <- function(a, b) {
+  c(missing(a), missing(b))
+}
+
+i()
+i(1,2)
+
+# Lazy evalution
+# R function arguments are lazy - they're only evaluated if they're actually used
+
+f <- function(x) {
+  10
+}
+
+f(stop("This is an error"))
+
+# If a want to ensure that an argument is evaluated i can use force()
+
+f <- function(x) {
+  force(x)
+  10
+}
+
+f(stop("This is an error"))
+
+# This is important when creating closures with lapply() or a loop
+add <- function(x) {
+  function(y) x + y
+}
+
+x <- add(2)    # Examine the function
+x(3)
+
+adders <- lapply(1:10, add)
+adders
+
+adders[[1]](10)
+adders[[10]](10)
+
+# Default argumrnts are evaluated inside the function. If the expression depends
+# on the current environment the results will deffer depending on wheather you use
+# the defalut value or explicitly provide one.
+
+f <- function(x = ls()) {
+  a <- 1
+  x
+}
+
+f()
+f(ls())
+
+# Exercise...........................
+# Clarify the following list of odd function calls:
+
+x <- sample(replace = TRUE, 20, x = c(1:10, NA))
+x <- sample(c(1:10, NA), size = 20, replace = TRUE)    # Clarified
+x
+
+y <- runif(min = 0, max = 1, 20)
+y <- runif(20, min = 0, max = 1)
+y
+
+cor(m = "k", y = y, u = "p", x = x)
+cor(x, y, use = "pairwise", method = "kendall")
+
+# What does the function return? Why? Which principle does it illustrate?
+
+f1 <- function(x = {y <- 1; 2}, y = 0) {
+  x + y
+}
+f1()
