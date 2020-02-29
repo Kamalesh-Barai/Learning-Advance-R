@@ -348,3 +348,19 @@ f1 <- function(x = {y <- 1; 2}, y = 0) {
   x + y
 }
 f1()
+
+# Replacement functions..................
+# They act like they modify thier argumrnts in place, and have special name xxx<-.
+# They typically have two arguments (x and value). They must return the modified
+# object. The following function allows me to modify the second element of a vector.
+
+`second<-` <- function(x, value) {
+  x[2] <- value
+  x
+}
+
+x <- 1:10
+`second<-`(x, 5)
+
+second(x) <- 5L
+x
